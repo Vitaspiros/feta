@@ -1,0 +1,109 @@
+#include "letter.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+const wchar_t* vowels = L"ΑΕΗΙΥΟΩαεηιουω";
+const wchar_t* vowelsAccent = L"ΆΈΉΊΎΌΏάέήίόύώ";
+const wchar_t* consonants = L"ΒΓΔΖΘΚΛΜΝΞΠΡΣΤΦΧΨβγδζθκλμνξπρστφχψ";
+const wchar_t* diphthongs[] = {
+    L"αι", L"οι", L"ει", L"υι", L"ου",
+
+    L"αί", L"οί", L"εί", L"υί", L"ού"
+};
+const wchar_t* digraphs[] = {
+    L"μπ", L"ντ", L"γκ", L"γγ", L"τζ", L"τσ"
+};
+
+letter_info_t* get_letters_from_word(wchar_t* word) {
+    int wordLength = wcslen(word);
+    letter_info_t* info = malloc(wordLength * sizeof(letter_info_t));
+
+    int infoCount = 0;
+    int i;
+    for (i = 0; i < wordLength; i++) {
+        bool isVowel = false;
+        for (int j = 0; j < 14; j++) {
+            if (word[i] == vowelsAccent[j]) {
+                // set as vowel
+                wcsncpy(info[i].letter, &word[i], 1); // copy the letter into the struct
+                info[infoCount].type = LETTER_TYPE_VOWEL;
+                isVowel = true;
+                break;
+            } else if (word[i] == vowels[j]) {
+                if (i != wordLength - 1) { // if this isn't the last letter
+                    // we check if the letter composes a diphthong
+                    // diphthongs are composed of two letters and count as one vowel
+                    bool found = false;
+                    for (int k = 0; k < 10; k++) {
+                        if (word[i] == diphthongs[k][0] && word[i + 1] == diphthongs[k][1]) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (found) {
+                        wcsncpy(info[infoCount].letter, &word[i], 2); // copy both letters into the struct
+                        info[infoCount].type = LETTER_TYPE_VOWEL;
+                        i++; // advance i, so we do not double count the next letter
+                        isVowel = true;
+                        break;
+                    }
+                }
+                // else, this is a single vowel
+                wcsncpy(info[infoCount].letter, &word[i], 1); // copy the letter into the struct
+                info[infoCount].type = LETTER_TYPE_VOWEL;
+                isVowel = true;
+                break;
+            }
+        }
+
+        if (!isVowel) {
+            bool isConsonantDigraph = false;
+            if (i != wordLength - 1) { // if this isn't the last letter
+                // we check if the letter composes a consonant digraph
+                // this is two consonants counted as a single consonant
+
+                for (int j = 0; j < 6; j++) {
+                    if (word[i] == digraphs[j][0] && word[i + 1] == digraphs[j][1]) {
+                        isConsonantDigraph = true;
+                        break;
+                    }
+                }
+
+                if (isConsonantDigraph) {
+                    wcsncpy(info[infoCount].letter, &word[i], 2); // copy both letters into the struct
+                    info[infoCount].type = LETTER_TYPE_CONSONANT;
+                    i++; // advance i, so we do not double count the next letter
+                    isVowel = true;
+                }
+            }
+
+            if (!isConsonantDigraph) {
+                wcsncpy(info[infoCount].letter, &word[i], 1); // copy the letter into the struct
+                info[infoCount].type = LETTER_TYPE_CONSONANT;
+            }
+        }
+        infoCount++;
+    }
+    info[infoCount - 1].isLast = true;
+
+    return info;
+}
+
+void letters_debug(wchar_t* word) {
+    letter_info_t* info = get_letters_from_word(word);
+
+    int i = 0;
+
+    while (true) {
+        if (info[i].type == LETTER_TYPE_VOWEL) putchar('v');
+        else putchar('c');
+
+        if (info[i++].isLast) break;
+    }
+    putchar('\n');
+    fflush(stdout);
+
+    free(info);
+
+}
