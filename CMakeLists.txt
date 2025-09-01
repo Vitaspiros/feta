@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 
+set(CMAKE_BUILD_TYPE DEBUG)
+
 project(greek_typo_checker)
 
 # Syllable counter
