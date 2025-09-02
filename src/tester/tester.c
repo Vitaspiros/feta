@@ -80,9 +80,11 @@ int main(int argc, const char** argv) {
 
         int pos = 0;
         for (int j = 0; j < info.count; j++) {
-            int segmentLength = info.segments[j][1] - info.segments[j][0] + 1;
-            wcsncpy(&generatedSyllables[pos], &word[info.segments[j][0]], segmentLength);
-            pos += segmentLength;
+            for (int k = info.segments[j][0]; k <= info.segments[j][1]; k++) {
+                wcscpy(&generatedSyllables[pos], info.letterInfo[k].letter);
+                pos += wcslen(info.letterInfo[k].letter);
+                if (info.letterInfo[k].isLast) break;
+            }
             if (j != info.count - 1) generatedSyllables[pos++] = L'-';
         }
         generatedSyllables[pos] = L'\0';
