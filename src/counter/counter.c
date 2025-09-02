@@ -23,7 +23,7 @@ int main(int argc, const char** argv) {
     syllable_info_t syllableInfo = syllable_count(word);
     for (int i = 0; i < syllableInfo.count; i++) {
         for (int j = syllableInfo.segments[i][0]; j <= syllableInfo.segments[i][1]; j++) {
-            printf("%lc", word[j]);
+            printf("%ls", syllableInfo.letterInfo[j].letter);
         }
         if (i != syllableInfo.count - 1) printf("-");
     }
@@ -31,5 +31,6 @@ int main(int argc, const char** argv) {
     fflush(stdout);
 
     free(syllableInfo.segments);
+    free(syllableInfo.letterInfo);
     return 0;
 }

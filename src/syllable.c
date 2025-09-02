@@ -105,10 +105,9 @@ syllable_info_t syllable_count(wchar_t* word) {
 
     sort_by_start_index(syllables, syllableCount);
 
-    free(info);
-
     syllable_info_t ret;
     ret.count = syllableCount;
     ret.segments = &syllables[0];
+    ret.letterInfo = info;
     return ret;
 }
