@@ -12,6 +12,7 @@ typedef enum {
 typedef struct {
     wchar_t letter[3]; // can include up to two actual letters
     letter_type_t type;
+    bool isDigraph; // false if the struct contains one letter, true if it contains two
     bool isLast;
 } letter_info_t;
 

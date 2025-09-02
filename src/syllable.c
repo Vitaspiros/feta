@@ -1,11 +1,17 @@
 #include "syllable.h"
 #include "letter.h"
+#include "tables.h"
 #include <stdlib.h>
 
 /*
     Rules of syllable counting:
         1)  When there is a consonant between two vowels (vcv), the consonant forms a syllable 
             with the second vowel (vcv -> v-cv).
+        2)  When there are two consonants between two vowels (vccv), if the two consonants are in the
+            startingSyllables table, the consonants form a syllable with the second vowel (vccv -> v-ccv).
+            If they do not exist in the table, the first consonant forms a syllable with the first vowel,
+            and the second consonant forms a syllable with the second vowel (vccv -> vc-cv).
+
 */
 
 static void swap(int* a, int* b) {
@@ -49,10 +55,11 @@ syllable_info_t syllable_count(wchar_t* word) {
 
     // for rule 1 we check for two vowels, two letters apart.
     // this means we have one consonant between two vowels (vcv)
+    // for rule 2 we check for two vowels three letters apart.
     int prevIndex = 0;
     for (int i = 0; i < 16; i++) {
         if (vowelIndices[i] - prevIndex < 0) break; // no more vowels
-        if (vowelIndices[i] - prevIndex == 2) { // two letters apart
+        if (vowelIndices[i] - prevIndex == 2) { // rule 1
             syllables[syllableCount][0] = vowelIndices[i] - 1;
 
             // the syllable will end at the next vowel
@@ -61,6 +68,34 @@ syllable_info_t syllable_count(wchar_t* word) {
             if (nextLetterInfo.type == LETTER_TYPE_CONSONANT && nextLetterInfo.isLast && vowelIndices[i] != wordSize - 1) offset = 1;
             syllables[syllableCount][1] = vowelIndices[i] + offset;
             syllableCount++;
+        }
+
+        else if (vowelIndices[i] - prevIndex == 3) { // rule 2
+            wchar_t consonants[3];
+            if (info[vowelIndices[i] - 1].isDigraph || info[prevIndex + 1].isDigraph) {
+                // TODO: Rule 3
+            } else {
+                // put the two consonants in the array
+                consonants[0] = info[prevIndex + 1].letter[0];
+                consonants[1] = info[vowelIndices[i] - 1].letter[0];
+                consonants[2] = '\0';
+
+                bool found = false;
+                for (int j = 0; j < 49; j++) {
+                    if (!wcscasecmp(consonants, startingSyllables[j])) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found)
+                    syllables[syllableCount][0] = prevIndex + 1;
+                else
+                    syllables[syllableCount][0] = vowelIndices[i] - 1;
+
+                syllables[syllableCount][1] = vowelIndices[i];
+                syllableCount++;
+            }
         }
 
         prevIndex = vowelIndices[i];

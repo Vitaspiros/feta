@@ -1,5 +1,6 @@
 #include "letter.h"
 #include "tables.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -16,6 +17,7 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                 // set as vowel
                 wcsncpy(info[infoCount].letter, &word[i], 1); // copy the letter into the struct
                 info[infoCount].type = LETTER_TYPE_VOWEL;
+                info[infoCount].isDigraph = false;
                 isVowel = true;
                 break;
             } else if (word[i] == vowels[j]) {
@@ -33,6 +35,7 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                     if (found) {
                         wcsncpy(info[infoCount].letter, &word[i], 2); // copy both letters into the struct
                         info[infoCount].type = LETTER_TYPE_VOWEL;
+                        info[infoCount].isDigraph = true;
                         i++; // advance i, so we do not double count the next letter
                         isVowel = true;
                         break;
@@ -41,6 +44,7 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                 // else, this is a single vowel
                 wcsncpy(info[infoCount].letter, &word[i], 1); // copy the letter into the struct
                 info[infoCount].type = LETTER_TYPE_VOWEL;
+                info[infoCount].isDigraph = false;
                 isVowel = true;
                 break;
             }
@@ -62,14 +66,15 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                 if (isConsonantDigraph) {
                     wcsncpy(info[infoCount].letter, &word[i], 2); // copy both letters into the struct
                     info[infoCount].type = LETTER_TYPE_CONSONANT;
+                    info[infoCount].isDigraph = true;
                     i++; // advance i, so we do not double count the next letter
-                    isVowel = true;
                 }
             }
 
             if (!isConsonantDigraph) {
                 wcsncpy(info[infoCount].letter, &word[i], 1); // copy the letter into the struct
                 info[infoCount].type = LETTER_TYPE_CONSONANT;
+                info[infoCount].isDigraph = false;
             }
         }
         infoCount++;

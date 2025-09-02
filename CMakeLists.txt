@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE DEBUG)
 
 project(greek_typo_checker)
 
-add_library(typo_checker src/letter.c src/syllable.c)
+add_library(typo_checker src/letter.c src/syllable.c src/tables.c)
 
 # Syllable counter
 add_executable(counter src/counter/counter.c)
