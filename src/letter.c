@@ -25,7 +25,7 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
         for (int j = 0; j < 14; j++) {
             if (word[i] == vowelsAccent[j]) {
                 // set as vowel
-                wcsncpy(info[i].letter, &word[i], 1); // copy the letter into the struct
+                wcsncpy(info[infoCount].letter, &word[i], 1); // copy the letter into the struct
                 info[infoCount].type = LETTER_TYPE_VOWEL;
                 isVowel = true;
                 break;
