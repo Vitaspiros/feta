@@ -67,6 +67,8 @@ syllable_info_t syllable_count(wchar_t* word) {
     }
 
     // add left over segments as syllables
+
+    // check if the start of the word is included
     if (syllables[0][0] != 0) { // if the first syllable does not start from the start of the word
         // add one that starts from 0 up to that syllable
         syllables[syllableCount][0] = 0;
@@ -75,6 +77,14 @@ syllable_info_t syllable_count(wchar_t* word) {
     }
     
     sort_by_start_index(syllables, syllableCount);
+    // check if the end of the word is included
+    if (syllables[syllableCount - 1][1] != wordSize - 1) {
+        // add one that starts from the end of the last syllable up to the end of the word
+        syllables[syllableCount][0] = syllables[syllableCount - 1][1] + 1;
+        syllables[syllableCount][1] = wordSize;
+        syllableCount++;
+    }
+    
     int* prevSegment = syllables[0];
     int currentSyllableCount = syllableCount;
     for (int i = 1; i < currentSyllableCount; i++) {
@@ -92,6 +102,7 @@ syllable_info_t syllable_count(wchar_t* word) {
 
         prevSegment = syllables[i];
     }
+
     sort_by_start_index(syllables, syllableCount);
 
     free(info);
