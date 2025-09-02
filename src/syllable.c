@@ -58,7 +58,7 @@ syllable_info_t syllable_count(wchar_t* word) {
             // the syllable will end at the next vowel
             int offset = 0;
             letter_info_t nextLetterInfo = info[vowelIndices[i] + 1];
-            if (nextLetterInfo.type == LETTER_TYPE_CONSONANT && nextLetterInfo.isLast) offset = 1;
+            if (nextLetterInfo.type == LETTER_TYPE_CONSONANT && nextLetterInfo.isLast && vowelIndices[i] != wordSize - 1) offset = 1;
             syllables[syllableCount][1] = vowelIndices[i] + offset;
             syllableCount++;
         }
