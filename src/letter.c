@@ -1,18 +1,7 @@
 #include "letter.h"
+#include "tables.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-const wchar_t* vowels = L"ΑΕΗΙΥΟΩαεηιουω";
-const wchar_t* vowelsAccent = L"ΆΈΉΊΎΌΏάέήίόύώ";
-const wchar_t* consonants = L"ΒΓΔΖΘΚΛΜΝΞΠΡΣΤΦΧΨβγδζθκλμνξπρστφχψ";
-const wchar_t* diphthongs[] = {
-    L"αι", L"οι", L"ει", L"υι", L"ου",
-
-    L"αί", L"οί", L"εί", L"υί", L"ού"
-};
-const wchar_t* digraphs[] = {
-    L"μπ", L"ντ", L"γκ", L"γγ", L"τζ", L"τσ"
-};
 
 letter_info_t* get_letters_from_word(wchar_t* word) {
     int wordLength = wcslen(word);
