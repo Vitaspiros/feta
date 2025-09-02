@@ -16,7 +16,7 @@ const wchar_t* digraphs[] = {
 
 letter_info_t* get_letters_from_word(wchar_t* word) {
     int wordLength = wcslen(word);
-    letter_info_t* info = malloc(wordLength * sizeof(letter_info_t));
+    letter_info_t* info = calloc(wordLength, sizeof(letter_info_t));
 
     int infoCount = 0;
     int i;
