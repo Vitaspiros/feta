@@ -11,6 +11,8 @@
             startingSyllables table, the consonants form a syllable with the second vowel (vccv -> v-ccv).
             If they do not exist in the table, the first consonant forms a syllable with the first vowel,
             and the second consonant forms a syllable with the second vowel (vccv -> vc-cv).
+        3)  When there are three consonants between two vowels (vcccv), we take the first two and do
+            the same thing as rule 2.  (vccv -> v-cccv or vcccv -> vcc-cv)
 
 */
 
@@ -36,6 +38,17 @@ static void sort_by_start_index(int array[16][2], int size) {
     }
 }
 
+static bool isValidStartingSyllable(wchar_t* syllable) {
+    bool found = false;
+    for (int j = 0; j < 49; j++) {
+        if (!wcscasecmp(syllable, startingSyllables[j])) {
+            found = true;
+            break;
+        }
+    }
+    return found;
+}
+
 syllable_info_t syllable_count(wchar_t* word) {
     letter_info_t* info = get_letters_from_word(word);
     int (*syllables)[2] = malloc(sizeof(int[16][2]));
@@ -56,7 +69,7 @@ syllable_info_t syllable_count(wchar_t* word) {
     // for rule 1 we check for two vowels, two letters apart.
     // this means we have one consonant between two vowels (vcv)
     // for rule 2 we check for two vowels three letters apart.
-    int prevIndex = 0;
+    int prevIndex = -1;
     for (int i = 0; i < 16; i++) {
         if (vowelIndices[i] - prevIndex < 0) break; // no more vowels
         if (vowelIndices[i] - prevIndex == 2) { // rule 1
@@ -70,32 +83,36 @@ syllable_info_t syllable_count(wchar_t* word) {
             syllableCount++;
         }
 
-        else if (vowelIndices[i] - prevIndex == 3) { // rule 2
+        else if (vowelIndices[i] - prevIndex >= 3) { // rule 2 and 3
             wchar_t consonants[3];
-            if (info[vowelIndices[i] - 1].isDigraph || info[prevIndex + 1].isDigraph) {
-                // TODO: Rule 3
+            letter_info_t firstConsonant = info[prevIndex + 1];
+            letter_info_t secondConsonant = info[vowelIndices[i] - 1];
+
+            bool rule3 = vowelIndices[i] - prevIndex > 3;
+            if (firstConsonant.isDigraph || secondConsonant.isDigraph) {
+                // part of rule 3
+                consonants[0] = firstConsonant.letter[0];
+                if (firstConsonant.isDigraph) consonants[1] = firstConsonant.letter[1];
+                else consonants[1] = secondConsonant.letter[0];
+                consonants[2] = L'\0';
+                
+                rule3 = true;
             } else {
                 // put the two consonants in the array
-                consonants[0] = info[prevIndex + 1].letter[0];
-                consonants[1] = info[vowelIndices[i] - 1].letter[0];
-                consonants[2] = '\0';
-
-                bool found = false;
-                for (int j = 0; j < 49; j++) {
-                    if (!wcscasecmp(consonants, startingSyllables[j])) {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (found)
-                    syllables[syllableCount][0] = prevIndex + 1;
-                else
-                    syllables[syllableCount][0] = vowelIndices[i] - 1;
-
-                syllables[syllableCount][1] = vowelIndices[i];
-                syllableCount++;
+                consonants[0] = firstConsonant.letter[0];
+                consonants[1] = secondConsonant.letter[0];
+                consonants[2] = L'\0';
             }
+
+            bool isStartingSyllable = isValidStartingSyllable(consonants);
+
+            if (isStartingSyllable)
+                syllables[syllableCount][0] = prevIndex + 1;
+            else
+                syllables[syllableCount][0] = rule3 ? vowelIndices[i] - 2 : vowelIndices[i] - 1;
+
+            syllables[syllableCount][1] = vowelIndices[i];
+            syllableCount++;
         }
 
         prevIndex = vowelIndices[i];
