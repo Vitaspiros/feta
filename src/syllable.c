@@ -100,9 +100,10 @@ syllable_info_t syllable_count(wchar_t* word) {
         else if (vowelIndices[i] - prevIndex >= 3) { // rule 2 and 3
             wchar_t consonants[3];
             letter_info_t firstConsonant = info[prevIndex + 1];
-            letter_info_t secondConsonant = info[vowelIndices[i] - 1];
+            letter_info_t secondConsonant = info[prevIndex + 2];
 
-            bool rule3 = vowelIndices[i] - prevIndex > 3;
+            int extraLetters = vowelIndices[i] - prevIndex - 3;
+            bool rule3 = extraLetters > 0;
             if (firstConsonant.isDigraph || secondConsonant.isDigraph) {
                 // part of rule 3
                 consonants[0] = firstConsonant.letter[0];
@@ -123,7 +124,7 @@ syllable_info_t syllable_count(wchar_t* word) {
             if (isStartingSyllable)
                 syllables[syllableCount][0] = prevIndex + 1;
             else
-                syllables[syllableCount][0] = rule3 ? vowelIndices[i] - 2 : vowelIndices[i] - 1;
+                syllables[syllableCount][0] = rule3 ? vowelIndices[i] - extraLetters - 1 : vowelIndices[i] - 1;
 
             syllables[syllableCount][1] = vowelIndices[i];
             syllableCount++;
