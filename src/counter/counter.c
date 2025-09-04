@@ -21,13 +21,10 @@ int main(int argc, const char** argv) {
     mbstowcs(word, argv[1], cWordSize);
 
     syllable_info_t syllableInfo = syllable_count(word);
-    for (int i = 0; i < syllableInfo.count; i++) {
-        for (int j = syllableInfo.segments[i][0]; j <= syllableInfo.segments[i][1]; j++) {
-            printf("%ls", syllableInfo.letterInfo[j].letter);
-        }
-        if (i != syllableInfo.count - 1) printf("-");
-    }
-    putchar('\n');
+    wchar_t outputString[64];
+    syllable_get_string(syllableInfo, outputString);
+
+    printf("%ls\n", outputString);
     fflush(stdout);
 
     free(syllableInfo.segments);

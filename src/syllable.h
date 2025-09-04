@@ -10,3 +10,4 @@ typedef struct {
 } syllable_info_t;
 
 syllable_info_t syllable_count(wchar_t* word);
+void syllable_get_string(syllable_info_t, wchar_t*);

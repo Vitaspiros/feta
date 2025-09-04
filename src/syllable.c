@@ -2,6 +2,7 @@
 #include "letter.h"
 #include "tables.h"
 #include <stdlib.h>
+#include <wchar.h>
 
 /*
     Rules of syllable counting:
@@ -47,6 +48,19 @@ static bool isValidStartingSyllable(wchar_t* syllable) {
         }
     }
     return found;
+}
+
+void syllable_get_string(syllable_info_t info, wchar_t* output) {
+    int pos = 0;
+    for (int j = 0; j < info.count; j++) {
+        for (int k = info.segments[j][0]; k <= info.segments[j][1]; k++) {
+            wcscpy(&output[pos], info.letterInfo[k].letter);
+            pos += wcslen(info.letterInfo[k].letter);
+            if (info.letterInfo[k].isLast) break;
+        }
+        if (j != info.count - 1) output[pos++] = L'-';
+    }
+    output[pos] = L'\0';
 }
 
 syllable_info_t syllable_count(wchar_t* word) {
