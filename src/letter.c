@@ -25,18 +25,20 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                     // we check if the letter composes a diphthong
                     // diphthongs are composed of two letters and count as one vowel
                     bool found = false;
-                    for (int k = 0; k < 10; k++) {
-                        if (word[i] == diphthongs[k][0] && word[i + 1] == diphthongs[k][1]) {
+                    int diphthongLength;
+                    for (int k = 0; k < 22; k++) {
+                        if (!wcsncmp(&word[i], diphthongs[k], wcslen(diphthongs[k]))) {
                             found = true;
+                            diphthongLength = wcslen(diphthongs[k]);
                             break;
                         }
                     }
 
                     if (found) {
-                        wcsncpy(info[infoCount].letter, &word[i], 2); // copy both letters into the struct
+                        wcsncpy(info[infoCount].letter, &word[i], diphthongLength); // copy all letters into the struct
                         info[infoCount].type = LETTER_TYPE_VOWEL;
                         info[infoCount].isDigraph = true;
-                        i++; // advance i, so we do not double count the next letter
+                        i += diphthongLength - 1; // advance i, so we do not double count the next letter
                         isVowel = true;
                         break;
                     }
