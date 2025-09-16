@@ -3,6 +3,7 @@
 #include "tables.h"
 #include <stdlib.h>
 #include <wchar.h>
+#include <limits.h>
 
 /*
     Rules of syllable counting:
@@ -53,7 +54,6 @@ static bool isValidStartingSyllable(wchar_t* syllable) {
 void syllable_get_string(syllable_info_t info, wchar_t* output) {
     int pos = 0;
     for (int j = 0; j < info.count; j++) {
-        if (info.segments[j][0] == -1 || info.segments[j][1] == -1) continue; // skip invalid segments
         for (int k = info.segments[j][0]; k <= info.segments[j][1]; k++) {
             wcscpy(&output[pos], info.letterInfo[k].letter);
             pos += wcslen(info.letterInfo[k].letter);
@@ -176,6 +176,8 @@ syllable_info_t syllable_count(wchar_t* word) {
     // check for mistakes that put one consonant in its own syllable (this isn't allowed) and fix them
     currentSyllableCount = syllableCount;
     prevSegment = syllables[syllableCount - 1]; // initialize it to the last segment
+
+    int syllablesRemoved = 0;
     for (int i = 0; i < currentSyllableCount; i++) {
         int* thisSegment = syllables[i];
 
@@ -183,19 +185,20 @@ syllable_info_t syllable_count(wchar_t* word) {
         if (thisSegment[0] == thisSegment[1]) {
              // and this letter is consonant
             if (info[thisSegment[0]].type == LETTER_TYPE_CONSONANT) {
-                // mark the syllables as invalid (set it to {-1, -1})
-                thisSegment[0] = -1;
-                thisSegment[1] = -1;
+                // mark the syllables as invalid (set it to {2147483647, 2147483647} so the sort will sort it last)
+                thisSegment[0] = INT_MAX;
+                thisSegment[1] = INT_MAX;
 
                 if (i == 0) syllables[i + 1][1]++; // if this is the first segment, the next segment will include the consonant
                 else prevSegment[1]++; // otherwise, the previous segment will include the consonant
-
-                syllableCount--; // remove syllable from count
+                syllableCount--;
+                syllablesRemoved++;
             }
         }
 
         prevSegment = syllables[i];
     }
+    sort_by_start_index(syllables, syllableCount + syllablesRemoved);
 
     syllable_info_t ret;
     ret.count = syllableCount;
