@@ -20,6 +20,7 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                 wcsncpy(info[infoCount].letter, &word[i], 1); // copy the letter into the struct
                 info[infoCount].type = LETTER_TYPE_VOWEL;
                 info[infoCount].isDigraph = false;
+                info[infoCount].hasAccent = true;
                 isVowel = true;
                 break;
             } else if (c == vowels[j]) {
@@ -49,6 +50,7 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                 wcsncpy(info[infoCount].letter, &word[i], 1); // copy the letter into the struct
                 info[infoCount].type = LETTER_TYPE_VOWEL;
                 info[infoCount].isDigraph = false;
+                info[infoCount].hasAccent = false;
                 isVowel = true;
                 break;
             }
@@ -81,7 +83,9 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                 info[infoCount].type = LETTER_TYPE_CONSONANT;
                 info[infoCount].isDigraph = false;
             }
+            info[infoCount].hasAccent = false;
         }
+        info[infoCount].isCapital = iswupper(c);
         infoCount++;
     }
     info[infoCount - 1].isLast = true;
