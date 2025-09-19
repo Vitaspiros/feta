@@ -15,6 +15,7 @@
             and the second consonant forms a syllable with the second vowel (vccv -> vc-cv).
         3)  When there are three consonants between two vowels (vcccv), we take the first two and do
             the same thing as rule 2.  (vccv -> v-cccv or vcccv -> vcc-cv)
+        4)  No two or more distinct vowels (not digraphs) can be in the same syllable. (vv -> v-v)
 
 */
 
@@ -182,6 +183,7 @@ syllable_info_t syllable_count(wchar_t* word) {
         int* thisSegment = syllables[i];
 
         // if the syllable contains one letter
+        bool didRemoveSyllable = false;
         if (thisSegment[0] == thisSegment[1]) {
              // and this letter is consonant
             if (info[thisSegment[0]].type == LETTER_TYPE_CONSONANT) {
@@ -193,10 +195,27 @@ syllable_info_t syllable_count(wchar_t* word) {
                 else prevSegment[1]++; // otherwise, the previous segment will include the consonant
                 syllableCount--;
                 syllablesRemoved++;
+                didRemoveSyllable = true;
+            }
+        }
+        prevSegment = syllables[i];
+        if (didRemoveSyllable) continue;
+
+        // check for syllables containing many consecutive vowels
+        bool isVowel = false;
+        for (int j = thisSegment[0]; j <= thisSegment[1]; j++) {
+            if (info[j].type == LETTER_TYPE_VOWEL) {
+                if (isVowel) {
+                    // split syllables
+                    syllables[syllableCount][0] = j;
+                    syllables[syllableCount][1] = thisSegment[1];
+                    syllableCount++;
+                    thisSegment[1] = j - 1;
+                }
+                isVowel = true;
             }
         }
 
-        prevSegment = syllables[i];
     }
     sort_by_start_index(syllables, syllableCount + syllablesRemoved);
 
