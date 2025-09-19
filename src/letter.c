@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <wctype.h>
 
 letter_info_t* get_letters_from_word(wchar_t* word) {
     int wordLength = wcslen(word);
@@ -12,22 +13,23 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
     int i;
     for (i = 0; i < wordLength; i++) {
         bool isVowel = false;
+        wchar_t c = towlower(word[i]);
         for (int j = 0; j < 14; j++) {
-            if (word[i] == vowelsAccent[j]) {
+            if (c == vowelsAccent[j]) {
                 // set as vowel
                 wcsncpy(info[infoCount].letter, &word[i], 1); // copy the letter into the struct
                 info[infoCount].type = LETTER_TYPE_VOWEL;
                 info[infoCount].isDigraph = false;
                 isVowel = true;
                 break;
-            } else if (word[i] == vowels[j]) {
+            } else if (c == vowels[j]) {
                 if (i != wordLength - 1) { // if this isn't the last letter
                     // we check if the letter composes a diphthong
                     // diphthongs are composed of two letters and count as one vowel
                     bool found = false;
                     int diphthongLength;
                     for (int k = 0; k < 22; k++) {
-                        if (!wcsncmp(&word[i], diphthongs[k], wcslen(diphthongs[k]))) {
+                        if (!wcsncasecmp(&word[i], diphthongs[k], wcslen(diphthongs[k]))) {
                             found = true;
                             diphthongLength = wcslen(diphthongs[k]);
                             break;
@@ -58,8 +60,9 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                 // we check if the letter composes a consonant digraph
                 // this is two consonants counted as a single consonant
 
+                wchar_t nextChar = towlower(word[i + 1]);
                 for (int j = 0; j < 6; j++) {
-                    if (word[i] == digraphs[j][0] && word[i + 1] == digraphs[j][1]) {
+                    if (c == digraphs[j][0] && nextChar == digraphs[j][1]) {
                         isConsonantDigraph = true;
                         break;
                     }
