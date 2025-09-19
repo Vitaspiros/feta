@@ -13,8 +13,8 @@ const wchar_t* startingSyllables[] = {
     L"φρ", L"φτ", L"χθ", L"χλ", L"χν", L"χρ", L"χτ"
 };
 
-const wchar_t* vowels = L"ΑΕΗΙΥΟΩαεηιουω";
-const wchar_t* vowelsAccent = L"ΆΈΉΊΎΌΏάέήίόύώ";
+const wchar_t* vowels = L"αεηιουω";
+const wchar_t* vowelsAccent = L"άέήίόύώ";
 const wchar_t* diphthongs[] = {
     L"ια", L"ιο", L"ειο", L"εια", L"οιο", L"οια",
     L"ιά", L"ιό", L"ειό", L"ειά", L"οιό", L"οιά",
