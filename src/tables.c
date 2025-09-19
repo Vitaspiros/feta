@@ -23,5 +23,5 @@ const wchar_t* diphthongs[] = {
     L"αί", L"οί", L"εί", L"υί", L"ού",
 };
 const wchar_t* digraphs[] = {
-    L"μπ", L"ντ", L"γκ", L"γγ", L"τζ", L"τσ", L"τς"
+    L"μπ", L"ντ", L"γκ", L"τζ", L"τσ", L"τς"
 };
