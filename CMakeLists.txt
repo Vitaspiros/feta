@@ -11,6 +11,11 @@ add_executable(counter src/counter/counter.c)
 target_include_directories(counter PUBLIC src)
 target_link_libraries(counter PUBLIC typo_checker)
 
+# Typo checker
+add_executable(checker src/checker/checker.c)
+target_include_directories(checker PUBLIC src)
+target_link_libraries(checker PUBLIC typo_checker)
+
 # Syllable counter tester
 add_executable(tester src/tester/tester.c)
 target_include_directories(tester PUBLIC src)
