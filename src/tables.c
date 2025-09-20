@@ -17,9 +17,9 @@ const wchar_t* vowels = L"αεηιουω";
 const wchar_t* vowelsAccent = L"άέήίόύώ";
 const wchar_t* diphthongs[] = {
     L"ια", L"ιο", L"ειο", L"εια", L"οιο", L"οια",
-    L"ιά", L"ιό", L"ειό", L"ειά", L"οιό", L"οιά",
-
     L"αι", L"οι", L"ει", L"υι", L"ου",
+    
+    L"ιά", L"ιό", L"ειό", L"ειά", L"οιό", L"οιά",
     L"αί", L"οί", L"εί", L"υί", L"ού",
 };
 const wchar_t* digraphs[] = {

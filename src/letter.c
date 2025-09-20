@@ -29,7 +29,8 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                     // diphthongs are composed of two letters and count as one vowel
                     bool found = false;
                     int diphthongLength;
-                    for (int k = 0; k < 22; k++) {
+                    int k;
+                    for (k = 0; k < 22; k++) {
                         if (!wcsncasecmp(&word[i], diphthongs[k], wcslen(diphthongs[k]))) {
                             found = true;
                             diphthongLength = wcslen(diphthongs[k]);
@@ -41,6 +42,10 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                         wcsncpy(info[infoCount].letter, &word[i], diphthongLength); // copy all letters into the struct
                         info[infoCount].type = LETTER_TYPE_VOWEL;
                         info[infoCount].isDigraph = true;
+                        // the first half of the table contains the diphthongs without an accute accent and the second have contains the
+                        // diphthongs that have it. so we check whether the diphthong was found in the first or the second half of
+                        // the table to get whether it has an accute accent.
+                        info[infoCount].hasAccent = k > 11;
                         i += diphthongLength - 1; // advance i, so we do not double count the next letter
                         isVowel = true;
                         break;
