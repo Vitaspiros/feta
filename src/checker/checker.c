@@ -1,18 +1,16 @@
 #include "letter.h"
 #include "syllable.h"
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <wchar.h>
 #include <locale.h>
 
+#include "mistake.h"
+
 FILE* file;
 wchar_t word[64];
-
-void mistake(const char* message) {
-    printf("Mistake: %s\n", message);
-    printf("\tAt word %ls at position %ld\n\n", word, ftell(file));
-}
 
 int main(int argc, const char** argv) {
     setlocale(LC_ALL, "el_GR.UTF-8");
@@ -30,9 +28,12 @@ int main(int argc, const char** argv) {
 
     char terminator[4];
     bool endOfSentence = false;
+    int words = 0;
     while (1) {
         int ret = fscanf(file, "%l[^!;:. \n]%2[!;:. \n]", word, terminator);
         if (ret == EOF) break;
+
+        printf("\rAnalyzing... (%d words processed)", words);
 
         endOfSentence = terminator[0] != ' ';
         
@@ -46,12 +47,16 @@ int main(int argc, const char** argv) {
         }
 
         // only words with multiple syllables can have accent
-        if (syllableInfo.count == 1 && accentCount != 0) mistake("excess accute accent");
-        else if (syllableInfo.count > 1 && accentCount == 0) mistake("no accute accent although it is needed");
+        if (syllableInfo.count == 1 && accentCount != 0) mistake_add(MISTAKE_TYPE_EXCESS_ACCENT, ftell(file), word);
+        else if (syllableInfo.count > 1 && accentCount == 0) mistake_add(MISTAKE_TYPE_NO_ACCENT, ftell(file), word);
 
         free(syllableInfo.letterInfo);
+        words++;
     }
-
     fclose(file);
+
+    printf("\nSUMMARY:\n");
+    printf("%d mistakes found.\n\n", mistake_get_count());
+    mistake_summary();
     return 0;
 }

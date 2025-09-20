@@ -12,7 +12,7 @@ target_include_directories(counter PUBLIC src)
 target_link_libraries(counter PUBLIC typo_checker)
 
 # Typo checker
-add_executable(checker src/checker/checker.c)
+add_executable(checker src/checker/checker.c src/checker/mistake.c)
 target_include_directories(checker PUBLIC src)
 target_link_libraries(checker PUBLIC typo_checker)
 
