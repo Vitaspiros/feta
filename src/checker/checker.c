@@ -30,12 +30,12 @@ int main(int argc, const char** argv) {
     bool endOfSentence = false;
     int words = 0;
     while (1) {
-        int ret = fscanf(file, "%l[^!;:. \n]%2[!;:. \n]", word, terminator);
+        int ret = fscanf(file, "%l[^!;:., \n]%2[!;:., \n]", word, terminator);
         if (ret == EOF) break;
 
         printf("\rAnalyzing... (%d words processed)", words);
 
-        endOfSentence = terminator[0] != ' ';
+        endOfSentence = terminator[0] != ' ' && terminator[0] != ',';
         
         syllable_info_t syllableInfo = syllable_count(word);
 
