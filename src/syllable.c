@@ -135,6 +135,13 @@ syllable_info_t syllable_count(wchar_t* word) {
         prevIndex = vowelIndices[i];
     }
 
+    // handle an edge case where no syllables have been formed yet
+    if (syllableCount == 0) {
+        syllables[0][0] = 0;
+        syllables[0][1] = wordSize - 1;
+        syllableCount++;
+    }
+
     // add left over segments as syllables
 
     // check if the start of the word is included
