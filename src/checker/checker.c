@@ -12,6 +12,26 @@
 FILE* file;
 wchar_t word[64];
 
+bool needsAccuteAccent(syllable_info_t info) {
+    letter_info_t* letters = info.letterInfo;
+
+    // count the capital letters
+    int i = 0;
+    int capitalLetters = 0;
+    while (1) {
+        letter_info_t letter = letters[i];
+
+        if (letter.isCapital) capitalLetters++;
+        if (letter.isLast) break;
+        i++;
+    }
+
+    // a word needs accute accent only if all letters are lowercase or all letters are lowercase except the first
+    if (capitalLetters == 0) return true;
+    else if (capitalLetters == 1 && letters[0].isCapital) return true;
+    return false;
+}
+
 int main(int argc, const char** argv) {
     setlocale(LC_ALL, "el_GR.UTF-8");
 
@@ -38,6 +58,7 @@ int main(int argc, const char** argv) {
         endOfSentence = terminator[0] != ' ' && terminator[0] != ',';
         
         syllable_info_t syllableInfo = syllable_count(word);
+        if (!needsAccuteAccent(syllableInfo)) continue;
 
         int i = 0;
         int accentCount = 0;
