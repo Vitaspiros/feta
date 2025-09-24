@@ -10,7 +10,7 @@
 #include "mistake.h"
 
 FILE* file;
-wchar_t word[64];
+wchar_t word[65];
 
 bool needsAccuteAccent(syllable_info_t info) {
     letter_info_t* letters = info.letterInfo;
@@ -46,11 +46,11 @@ int main(int argc, const char** argv) {
         return -1;
     }
 
-    char terminator[4];
+    char terminator[65];
     bool endOfSentence = false;
     int words = 0;
     while (1) {
-        int ret = fscanf(file, "%l[^!;:., \n]%2[!;:., \n]", word, terminator);
+        int ret = fscanf(file, "%64l[^!;:., \n]%64[!;:., \n]", word, terminator);
         if (ret == EOF) break;
 
         printf("\rAnalyzing... (%d words processed)", words);
