@@ -5,11 +5,13 @@
 #include <wchar.h>
 #include <locale.h>
 
-#include <syllable.h>
+#include <feta.h>
 
 
 int main(int argc, const char** argv) {
     setlocale(LC_ALL, "el_GR.UTF-8");
+
+    printf("feta-counter with libfeta v%s by Vitabytes\n", LIBFETA_VERSION);
 
     if (argc < 2) {
         printf("Usage: %s <word>\n", argv[0]);

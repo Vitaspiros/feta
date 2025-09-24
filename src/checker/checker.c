@@ -1,3 +1,4 @@
+#include "feta.h"
 #include "letter.h"
 #include "syllable.h"
 
@@ -34,6 +35,8 @@ bool needsAccuteAccent(syllable_info_t info) {
 
 int main(int argc, const char** argv) {
     setlocale(LC_ALL, "el_GR.UTF-8");
+
+    printf("feta-check with libfeta v%s by Vitabytes\n", LIBFETA_VERSION);
 
     if (argc < 2) {
         printf("Usage: %s <filename>\n", argv[0]);

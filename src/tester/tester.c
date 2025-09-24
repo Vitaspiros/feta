@@ -6,7 +6,7 @@
 #include <wchar.h>
 #include <locale.h>
 
-#include <syllable.h>
+#include <feta.h>
 
 #define PASSED_COLOR 2
 #define FAILED_COLOR 3
@@ -62,7 +62,8 @@ int main(int argc, const char** argv) {
     int passedTests = 0;
     int failedTests = 0;
 
-    mvaddstr(0, 0, "Syllable counter tester program");
+    move(0, 0);
+    printw("feta-tester with libfeta v%s by Vitabytes", LIBFETA_VERSION);
     move(1, 0);
     printw("Testing %d words", totalWords);
 

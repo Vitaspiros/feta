@@ -2,22 +2,22 @@ cmake_minimum_required(VERSION 3.30)
 
 set(CMAKE_BUILD_TYPE DEBUG)
 
-project(greek_typo_checker)
+project(feta)
 
-add_library(typo_checker src/letter.c src/syllable.c src/tables.c)
+add_library(feta src/letter.c src/syllable.c src/tables.c)
 
 # Syllable counter
-add_executable(counter src/counter/counter.c)
-target_include_directories(counter PUBLIC src)
-target_link_libraries(counter PUBLIC typo_checker)
+add_executable(feta-count src/counter/counter.c)
+target_include_directories(feta-count PUBLIC src)
+target_link_libraries(feta-count PUBLIC feta)
 
 # Typo checker
-add_executable(checker src/checker/checker.c src/checker/mistake.c)
-target_include_directories(checker PUBLIC src)
-target_link_libraries(checker PUBLIC typo_checker)
+add_executable(feta-check src/checker/checker.c src/checker/mistake.c)
+target_include_directories(feta-check PUBLIC src)
+target_link_libraries(feta-check PUBLIC feta)
 
 # Syllable counter tester
-add_executable(tester src/tester/tester.c)
-target_include_directories(tester PUBLIC src)
-target_link_libraries(tester PUBLIC typo_checker)
-target_link_libraries(tester PRIVATE ncursesw)
+add_executable(feta-test src/tester/tester.c)
+target_include_directories(feta-test PUBLIC src)
+target_link_libraries(feta-test PUBLIC feta)
+target_link_libraries(feta-test PRIVATE ncursesw)
