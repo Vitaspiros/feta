@@ -88,7 +88,7 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
             }
             info[infoCount].hasAccent = false;
         }
-        info[infoCount].isCapital = iswupper(c);
+        info[infoCount].isCapital = iswupper(word[i]);
         infoCount++;
     }
     info[infoCount - 1].isLast = true;
