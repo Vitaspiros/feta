@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <wctype.h>
 
+#include "win32.h"
+
 letter_info_t* get_letters_from_word(wchar_t* word) {
     int wordLength = wcslen(word);
     letter_info_t* info = calloc(wordLength, sizeof(letter_info_t));

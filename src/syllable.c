@@ -5,6 +5,8 @@
 #include <wchar.h>
 #include <limits.h>
 
+#include "win32.h"
+
 /*
     Rules of syllable counting:
         1)  When there is a consonant between two vowels (vcv), the consonant forms a syllable 
