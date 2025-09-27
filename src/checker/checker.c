@@ -1,3 +1,4 @@
+#include "checker/exceptions.h"
 #include "feta.h"
 #include "letter.h"
 #include "syllable.h"
@@ -33,6 +34,13 @@ bool needsAccuteAccent(syllable_info_t info) {
     return false;
 }
 
+bool wordIsException(wchar_t* word) {
+    for (int i = 0; i < 15; i++) {
+        if (!wcscmp(exceptions[i], word)) return true;
+    }
+    return false;
+}
+
 int main(int argc, const char** argv) {
     setlocale(LC_ALL, "el_GR.UTF-8");
 
@@ -60,6 +68,7 @@ int main(int argc, const char** argv) {
 
         endOfSentence = terminator[0] != ' ' && terminator[0] != ',';
         
+        if (wordIsException(word)) continue;
         syllable_info_t syllableInfo = syllable_count(word);
         if (!needsAccuteAccent(syllableInfo)) continue;
 
