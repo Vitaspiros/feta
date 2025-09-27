@@ -16,7 +16,7 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
     for (i = 0; i < wordLength; i++) {
         bool isVowel = false;
         wchar_t c = towlower(word[i]);
-        for (int j = 0; j < 7; j++) {
+        for (int j = 0; j < 9; j++) {
             if (c == vowelsAccent[j]) {
                 // set as vowel
                 wcsncpy(info[infoCount].letter, &word[i], 1); // copy the letter into the struct
