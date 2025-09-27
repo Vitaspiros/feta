@@ -44,8 +44,8 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                         wcsncpy(info[infoCount].letter, &word[i], diphthongLength); // copy all letters into the struct
                         info[infoCount].type = LETTER_TYPE_VOWEL;
                         info[infoCount].isDigraph = true;
-                        // check if k is in the range of diphthongs with an accute accent (this happens to be 0-5 and 17-22)
-                        info[infoCount].hasAccent = k < 6 || k > 16;
+                        // check if k is in the range of diphthongs with an accute accent (this happens to be 0-8 and 22-28)
+                        info[infoCount].hasAccent = k < 9 || k > 22;
                         i += diphthongLength - 1; // advance i, so we do not double count the next letter
                         isVowel = true;
                         break;
