@@ -32,7 +32,7 @@ letter_info_t* get_letters_from_word(wchar_t* word) {
                     bool found = false;
                     int diphthongLength;
                     int k;
-                    for (k = 0; k < 22; k++) {
+                    for (k = 0; k < 28; k++) {
                         if (!wcsncasecmp(&word[i], diphthongs[k], wcslen(diphthongs[k]))) {
                             found = true;
                             diphthongLength = wcslen(diphthongs[k]);
